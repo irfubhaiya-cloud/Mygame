@@ -3,18 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>MegaWin Club - Premium Betting Hub</title>
+    <title>Megaton Casino - Play & Win Big</title>
     <style>
         :root {
-            --bg-main: #060e0b;
-            --bg-surface: #0f1f19;
-            --bg-card: #162d24;
-            --primary-green: #00e676;
-            --accent-gold: #ffd700;
-            --text-white: #ffffff;
-            --text-gray: #8ba398;
-            --danger-red: #ff1744;
-            --overlay-black: rgba(0, 0, 0, 0.85);
+            --bg-dark: #0a0a0c;
+            --app-bg: #14141a;
+            --accent-gold: #ffcc00;
+            --accent-purple: #8e44ad;
+            --text-light: #ffffff;
+            --text-dim: #8b8e96;
+            --border-color: #2c2c36;
         }
 
         * {
@@ -26,814 +24,281 @@
         }
 
         body {
-            background-color: var(--bg-main);
-            color: var(--text-white);
-            padding-bottom: 80px;
-            overflow-x: hidden;
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
         }
 
-        /* --- Custom Scrollbar --- */
-        ::-webkit-scrollbar { width: 5px; }
-        ::-webkit-scrollbar-track { background: var(--bg-main); }
-        ::-webkit-scrollbar-thumb { background: var(--bg-card); border-radius: 10px; }
+        /* Phone frame simulation for desktop view */
+        .app-container {
+            width: 360px; /* Mobile width */
+            height: 780px; /* Mobile height */
+            background-color: var(--app-bg);
+            border-radius: 20px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.8);
+            border: 4px solid #333;
+        }
 
-        /* --- Header / Top Bar --- */
-        .app-header {
+        /* Multiple pages inside one HTML file */
+        .page {
+            display: none; /* Hide all pages by default */
+            width: 100%;
+            height: 100%;
+            padding-bottom: 70px; /* Space for bottom nav */
+            overflow-y: auto;
+        }
+
+        .page.active { display: block; } /* Show only the active page */
+
+        /* Header Style (replicated from image) */
+        .header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 15px;
-            background-color: #091410;
+            padding: 15px 20px;
+            background: rgba(20, 20, 26, 0.9);
+            border-bottom: 1px solid var(--border-color);
             position: sticky;
             top: 0;
-            z-index: 99;
-            border-bottom: 1px solid #142a20;
+            z-index: 10;
         }
 
-        .logo-section {
+        .wallet-display {
+            background: rgba(255, 204, 0, 0.1);
+            border: 1px solid var(--accent-gold);
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-weight: bold;
             display: flex;
             align-items: center;
             gap: 8px;
-        }
-
-        .logo-icon {
-            font-size: 24px;
-            background: linear-gradient(45deg, var(--primary-green), var(--accent-gold));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            font-weight: bold;
-        }
-
-        .wallet-container {
-            background-color: var(--bg-surface);
-            border-radius: 25px;
-            display: flex;
-            align-items: center;
-            padding: 4px 12px;
-            border: 1px solid #1c3a2e;
-        }
-
-        .wallet-balance {
-            font-weight: 700;
-            font-size: 15px;
-            color: var(--primary-green);
-            margin-right: 8px;
-        }
-
-        .header-deposit-btn {
-            background-color: var(--primary-green);
-            color: #000;
-            border: none;
-            width: 22px;
-            height: 22px;
-            border-radius: 50%;
-            font-weight: bold;
-            font-size: 16px;
-            cursor: pointer;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        /* --- Interactive Slideshow / Banner --- */
-        .banner-slider {
-            padding: 15px;
-        }
-
-        .app-banner {
-            background: linear-gradient(135deg, #112a1f 0%, #063c26 100%);
-            border: 1px solid #23543d;
-            border-radius: 15px;
-            padding: 20px;
-            position: relative;
-            min-height: 140px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            box-shadow: 0 6px 20px rgba(0,0,0,0.4);
-            overflow: hidden;
-        }
-
-        .app-banner::after {
-            content: '👑';
-            position: absolute;
-            right: -10px;
-            bottom: -10px;
-            font-size: 100px;
-            opacity: 0.1;
-        }
-
-        .app-banner h2 {
-            font-size: 22px;
             color: var(--accent-gold);
-            margin-bottom: 5px;
         }
 
-        .app-banner p {
-            font-size: 13px;
-            color: var(--text-gray);
-        }
-
-        /* --- Quick Action Grid --- */
-        .quick-actions {
-            display: flex;
-            gap: 12px;
-            padding: 0 15px 15px 15px;
-        }
-
-        .action-card {
-            flex: 1;
-            background-color: var(--bg-surface);
-            border: 1px solid #1d3c30;
-            border-radius: 10px;
-            padding: 12px;
-            text-align: center;
-            cursor: pointer;
-            transition: transform 0.2s;
-        }
-
-        .action-card:active { transform: scale(0.95); }
-        .action-card .icon { font-size: 22px; margin-bottom: 4px; display: block; }
-        .action-card .label { font-size: 13px; font-weight: 600; }
-
-        /* --- Section Titles --- */
-        .section-header {
-            padding: 10px 15px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .section-header h2 {
-            font-size: 16px;
-            font-weight: 700;
-            letter-spacing: 0.5px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .section-header h2::before {
-            content: '';
-            display: inline-block;
-            width: 4px;
-            height: 16px;
-            background-color: var(--primary-green);
-            border-radius: 2px;
-        }
-
-        /* --- Game Grid (20 Games) --- */
-        .games-layout {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-            padding: 0 15px 20px 15px;
-        }
-
-        .game-item {
-            background-color: var(--bg-surface);
-            border-radius: 12px;
-            height: 110px;
-            padding: 12px;
+        /* PAGE 1: LOGIN (Design from Screen 1) */
+        #loginPage {
+            padding: 20px;
             display: flex;
             flex-direction: column;
-            justify-content: flex-end;
-            position: relative;
-            overflow: hidden;
-            cursor: pointer;
-            border: 1px solid #193429;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-            transition: transform 0.2s, border-color 0.2s;
-        }
-
-        .game-item:active { transform: scale(0.97); border-color: var(--primary-green); }
-
-        .game-item .game-title {
-            font-size: 14px;
-            font-weight: 700;
-            text-shadow: 1px 1px 3px rgba(0,0,0,0.8);
-            z-index: 2;
-        }
-
-        .game-item .game-provider {
-            font-size: 10px;
-            color: var(--text-gray);
-            z-index: 2;
-            margin-top: 2px;
-        }
-
-        .game-tag {
-            position: absolute;
-            top: 8px;
-            right: 8px;
-            font-size: 9px;
-            font-weight: 800;
-            padding: 2px 6px;
-            border-radius: 4px;
-            text-transform: uppercase;
-            z-index: 2;
-        }
-
-        .tag-hot { background-color: var(--danger-red); color: white; }
-        .tag-new { background-color: #00b0ff; color: white; }
-        .tag-vip { background-color: var(--accent-gold); color: black; }
-
-        /* Background Visual Gradients for Cards */
-        .g-aviator { background: linear-gradient(to bottom, rgba(231, 76, 60, 0.15), var(--bg-surface)); }
-        .g-7up { background: linear-gradient(to bottom, rgba(155, 89, 182, 0.15), var(--bg-surface)); }
-        .g-roulette { background: linear-gradient(to bottom, rgba(46, 204, 113, 0.15), var(--bg-surface)); }
-        .g-patti { background: linear-gradient(to bottom, rgba(241, 196, 15, 0.15), var(--bg-surface)); }
-        .g-mines { background: linear-gradient(to bottom, rgba(230, 126, 34, 0.15), var(--bg-surface)); }
-        .g-dragon { background: linear-gradient(to bottom, rgba(52, 152, 219, 0.15), var(--bg-surface)); }
-        .g-color { background: linear-gradient(to bottom, rgba(26, 188, 156, 0.15), var(--bg-surface)); }
-        .g-slots { background: linear-gradient(to bottom, rgba(243, 156, 18, 0.15), var(--bg-surface)); }
-        .g-baccarat { background: linear-gradient(to bottom, rgba(211, 84, 0, 0.15), var(--bg-surface)); }
-        .g-blackjack { background: linear-gradient(to bottom, rgba(142, 68, 173, 0.15), var(--bg-surface)); }
-        .g-sicbo { background: linear-gradient(to bottom, rgba(39, 174, 96, 0.15), var(--bg-surface)); }
-        .g-car { background: linear-gradient(to bottom, rgba(41, 128, 185, 0.15), var(--bg-surface)); }
-        .g-jetx { background: linear-gradient(to bottom, rgba(192, 41, 43, 0.15), var(--bg-surface)); }
-        .g-andar { background: linear-gradient(to bottom, rgba(22, 160, 133, 0.15), var(--bg-surface)); }
-        .g-ludo { background: linear-gradient(to bottom, rgba(39, 174, 96, 0.15), var(--bg-surface)); }
-        .g-wheel { background: linear-gradient(to bottom, rgba(241, 196, 15, 0.15), var(--bg-surface)); }
-        .g-plinko { background: linear-gradient(to bottom, rgba(230, 126, 34, 0.15), var(--bg-surface)); }
-        .g-poker { background: linear-gradient(to bottom, rgba(155, 89, 182, 0.15), var(--bg-surface)); }
-        .g-dice { background: linear-gradient(to bottom, rgba(52, 152, 219, 0.15), var(--bg-surface)); }
-        .g-crash { background: linear-gradient(to bottom, rgba(231, 76, 60, 0.15), var(--bg-surface)); }
-
-        .game-icon-box {
-            position: absolute;
-            right: 12px;
-            top: 25px;
-            font-size: 36px;
-            opacity: 0.25;
-        }
-
-        /* --- Modals / Popups Layout --- */
-        .modal-screen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: var(--overlay-black);
-            z-index: 999;
-            display: none;
             justify-content: center;
-            align-items: flex-end;
-        }
-
-        .modal-container {
-            background-color: var(--bg-surface);
-            width: 100%;
-            max-width: 500px;
-            border-top-left-radius: 20px;
-            border-top-right-radius: 20px;
-            padding: 20px;
-            max-height: 85vh;
-            overflow-y: auto;
-            border-top: 2px solid var(--primary-green);
-            animation: slideUp 0.3s ease-out;
-        }
-
-        @keyframes slideUp {
-            from { transform: translateY(100%); }
-            to { transform: translateY(0); }
-        }
-
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid #1a362b;
+            background: linear-gradient(to bottom, #1d1d26 0%, #0d0d12 100%);
         }
 
-        .modal-title { font-size: 18px; font-weight: bold; color: var(--accent-gold); }
-        .modal-close { font-size: 24px; cursor: pointer; color: var(--text-gray); }
+        .login-logo {
+            font-size: 32px;
+            font-weight: 900;
+            color: var(--accent-gold);
+            margin-bottom: 50px;
+            text-transform: uppercase;
+        }
 
-        /* Input Controls */
-        .form-group { margin-bottom: 15px; }
-        .form-label { display: block; font-size: 13px; color: var(--text-gray); margin-bottom: 6px; }
-        .form-input {
+        .login-input {
             width: 100%;
-            padding: 12px;
-            background-color: var(--bg-main);
-            border: 1px solid #204435;
+            padding: 15px;
             border-radius: 8px;
+            border: 1px solid var(--border-color);
+            background-color: #0d0d12;
             color: white;
-            font-size: 15px;
+            margin-bottom: 15px;
             outline: none;
         }
-        .form-input:focus { border-color: var(--primary-green); }
 
-        /* Amount Selector Chips */
-        .chip-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 15px; }
-        .amount-chip {
-            background-color: var(--bg-card);
-            border: 1px solid #24493a;
-            padding: 10px 0;
-            text-align: center;
-            border-radius: 6px;
-            font-size: 13px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-        .amount-chip.active { background-color: var(--primary-green); color: black; border-color: white; }
-
-        /* Payment Providers Design */
-        .gateway-list { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 20px; }
-        .gateway-item {
-            background-color: var(--bg-card);
-            border: 1px solid #24493a;
-            padding: 12px;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            cursor: pointer;
-        }
-        .gateway-item.active { border-color: var(--accent-gold); background-color: #1a3b2e; }
-        .gateway-dot { width: 12px; height: 12px; border-radius: 50%; border: 2px solid var(--text-gray); display: inline-block; }
-        .gateway-item.active .gateway-dot { background-color: var(--accent-gold); border-color: var(--accent-gold); }
-
-        .submit-btn {
+        .login-btn {
             width: 100%;
-            background-color: var(--primary-green);
-            color: black;
+            background-color: var(--accent-purple);
+            color: white;
             border: none;
-            padding: 14px;
-            font-weight: bold;
+            padding: 15px;
             font-size: 16px;
+            font-weight: bold;
             border-radius: 8px;
             cursor: pointer;
             text-transform: uppercase;
         }
-        .submit-btn:active { background-color: #00c853; }
 
-        /* --- Tab View Screens --- */
-        .tab-content-view { display: none; padding: 15px; }
-        .tab-content-view.active-view { display: block; }
+        /* PAGE 2: HOME (Design from Screen 2) */
+        #homePage .header { justify-content: space-between; }
+        #homePage .header .wallet-display { margin-left: auto; }
 
-        /* Invite UI Styling */
-        .invite-box {
-            background: linear-gradient(135deg, #163327, #0b1c15);
+        .banner {
+            background: linear-gradient(to bottom right, #ffcc00, #ff6600);
             border-radius: 12px;
             padding: 20px;
-            text-align: center;
-            border: 1px solid #285440;
-            margin-bottom: 20px;
-        }
-        .ref-box {
-            background-color: var(--bg-main);
-            padding: 12px;
-            border-radius: 6px;
-            margin: 15px 0;
+            margin: 15px;
+            height: 120px;
             display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .games-section { padding: 0 15px 15px 15px; }
+        .section-title { font-size: 18px; margin-bottom: 10px; color: #ddd; font-weight: bold; }
+        
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+
+        .game-card {
+            border-radius: 8px;
+            height: 100px;
+            padding: 10px;
+            background: linear-gradient(to bottom, #232330 0%, #15151f 100%);
+            display: flex;
+            flex-direction: column;
             justify-content: space-between;
-            align-items: center;
-            font-weight: bold;
-            border: 1px dashed var(--primary-green);
+            border: 1px solid var(--border-color);
+            cursor: pointer;
         }
+        
+        .game-card .title { font-size: 14px; font-weight: bold; }
+        .game-card .win-amt { font-size: 12px; color: var(--accent-gold); }
 
-        /* Rules Text Styling */
-        .rules-list { display: flex; flex-direction: column; gap: 12px; }
-        .rule-card { background-color: var(--bg-surface); padding: 12px; border-radius: 8px; border-left: 3px solid var(--accent-gold); }
-
-        /* Profile Block Layout */
-        .profile-card {
-            background-color: var(--bg-surface);
-            padding: 15px;
-            border-radius: 12px;
+        /* PAGE 3: GAME PAGE (Slots - Design from Screen 3) */
+        #gamePage {
+            padding: 20px;
             display: flex;
+            flex-direction: column;
             align-items: center;
-            gap: 15px;
-            margin-bottom: 20px;
-            border: 1px solid #1c3a2e;
+            background: radial-gradient(circle, #2a153d 0%, #101017 100%);
         }
-        .avatar-circle { width: 50px; height: 50px; background-color: var(--primary-green); border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 24px; color: black; }
 
-        /* --- Bottom Fixed Navigation --- */
-        .bottom-navbar {
-            position: fixed;
-            bottom: 0;
-            left: 0;
+        .megaton-title { font-size: 28px; color: var(--accent-gold); margin-bottom: 20px; text-transform: uppercase; font-weight: 800; }
+        
+        .payout-info { width: 100%; border: 1px solid var(--border-color); border-radius: 8px; margin-bottom: 15px; }
+        .payout-item { display: flex; justify-content: space-between; padding: 10px; border-bottom: 1px solid #1a1a24; }
+        .payout-item .p-label { color: #aaa; font-size: 12px; }
+        .payout-item .p-value { color: var(--accent-gold); font-size: 14px; font-weight: bold; }
+        
+        .slot-machine {
             width: 100%;
-            background-color: #08120e;
+            height: 250px;
+            border: 4px solid var(--accent-gold);
+            border-radius: 12px;
+            background-color: white;
+            margin-bottom: 20px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            justify-items: center;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .reel-symbol { font-size: 60px; font-weight: bold; color: black; } 
+        
+        .bet-input-wrap { width: 100%; display: flex; gap: 10px; margin-bottom: 20px; }
+        
+        .game-input { flex: 1; padding: 15px; border-radius: 8px; background: #000; color: white; border: 1px solid var(--border-color); text-align: center; font-weight: bold; outline: none;}
+
+        .spin-btn { width: 100%; padding: 15px; background-color: #c0392b; color: white; border: none; font-size: 18px; font-weight: bold; border-radius: 8px; cursor: pointer; text-transform: uppercase; }
+        .spin-btn:disabled { background-color: #555; cursor: not-allowed; }
+
+        /* PAGE 4 & 5: DEPOSIT & WITHDRAW DUMMY FORMS */
+        .form-page { padding: 20px; }
+        .form-title { font-size: 24px; margin-bottom: 20px; border-bottom: 1px solid var(--border-color); padding-bottom: 10px; color: #ddd; }
+        
+        .amount-row { display: flex; gap: 8px; margin-bottom: 15px; }
+        .amt-chip { flex: 1; padding: 10px; background: #1e1e26; border: 1px solid var(--border-color); border-radius: 5px; text-align: center; color: white; font-weight: bold; font-size: 14px; cursor: pointer;}
+        
+        .payment-methods {
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 10px;
+        }
+        
+        .method-item { display: flex; justify-content: space-between; padding: 12px 10px; border-bottom: 1px solid #1a1a24; cursor: pointer;}
+        .method-item:last-child { border-bottom: none; }
+        .method-item .m-name { display: flex; align-items: center; gap: 8px; font-size: 14px; }
+        
+        .main-action-btn { width: 100%; background-color: var(--accent-gold); color: #000; border: none; padding: 15px; font-size: 16px; font-weight: bold; border-radius: 8px; cursor: pointer; text-transform: uppercase; margin-top: 20px; }
+
+        /* Bottom Navigation Bar */
+        .bottom-nav {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            background-color: var(--app-bg);
             display: flex;
             justify-content: space-around;
             padding: 12px 0;
-            border-top: 1px solid #12281e;
-            z-index: 999;
+            border-top: 1px solid var(--border-color);
+            z-index: 10;
         }
 
-        .nav-link {
+        .nav-item {
             display: flex;
             flex-direction: column;
             align-items: center;
-            color: var(--text-gray);
-            font-size: 11px;
-            font-weight: 600;
+            color: var(--text-dim);
+            font-size: 12px;
             cursor: pointer;
-            gap: 3px;
+            gap: 4px;
         }
 
-        .nav-link.active-link { color: var(--primary-green); }
-        .nav-link span { font-size: 20px; }
+        .nav-item.active { color: var(--accent-gold); }
+        .nav-item.center-nav { color: var(--accent-purple); font-weight: bold;}
+        .nav-icon { font-size: 22px; }
 
-        .center-spin-container {
-            background: linear-gradient(135deg, #ffd700, #ff3d00);
-            width: 52px;
-            height: 52px;
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-top: -26px;
-            border: 4px solid var(--bg-main);
-            box-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
-            color: black;
-            font-weight: bold;
-        }
-        .center-spin-container span { font-size: 22px; }
     </style>
 </head>
 <body>
 
-    <div class="app-header">
-        <div class="logo-section">
-            <span class="logo-icon">🎰 MegaWin</span>
-        </div>
-        <div class="wallet-container">
-            <span class="wallet-balance">₹ <span id="displayBalance">1,000.00</span></span>
-            <button class="header-deposit-btn" onclick="openModal('depositModal')">+</button>
-        </div>
-    </div>
+    <div class="app-container">
 
-    <div id="homeView" class="tab-content-view active-view">
-        <div class="banner-slider">
-            <div class="app-banner">
-                <h2>🎁 Mega Invite Bonus</h2>
-                <p>Apne dosto ko invite karein aur har kamiyab referral par payein ₹500 tak ka instant bonus balance!</p>
-            </div>
+        <div id="loginPage" class="page active">
+            <div class="login-logo">Megaton</div>
+            <p style="color: #ddd; margin-bottom: 50px;">Welcome Back! Login to continue</p>
+            <input type="text" class="login-input" placeholder="Mobile Number">
+            <input type="password" class="login-input" placeholder="Password">
+            <button class="login-btn" onclick="navigateTo('homePage')">Login</button>
+            <p style="color: var(--text-dim); font-size: 12px; margin-top: 20px;">Forgot Password?</p>
         </div>
 
-        <div class="quick-actions">
-            <div class="action-card" onclick="openModal('depositModal')">
-                <span class="icon">💳</span>
-                <span class="label" style="color: var(--primary-green);">Deposit</span>
+        <div id="homePage" class="page">
+            <div class="header">
+                <span class="logo" style="color: var(--accent-gold); font-weight: 800;">MEGA</span>
+                <div class="wallet-display">₹<span class="balance">5,250.75</span> <span onclick="navigateTo('depositPage')" style="background:var(--accent-gold); color:black; border-radius:50%; width:16px; height:16px; display:inline-flex; justify-content:center; align-items:center; font-size:12px; cursor:pointer;">+</span></div>
+                <span style="font-size:18px;">👤</span>
             </div>
-            <div class="action-card" onclick="openModal('withdrawModal')">
-                <span class="icon">🏦</span>
-                <span class="label">Withdraw</span>
-            </div>
-        </div>
-
-        <div class="section-header">
-            <h2>Trending Casino Games (20)</h2>
-        </div>
-
-        <div class="games-layout">
-            <div class="game-item g-aviator" onclick="playGame('Aviator')">
-                <span class="game-tag tag-hot">Hot</span>
-                <div class="game-icon-box">✈️</div>
-                <span class="game-title">Aviator</span>
-                <span class="game-provider">Spribe Gaming</span>
-            </div>
-            <div class="game-item g-7up" onclick="playGame('7 Up 7 Down')">
-                <div class="game-icon-box">🎲</div>
-                <span class="game-title">7 Up 7 Down</span>
-                <span class="game-provider">Jili Games</span>
-            </div>
-            <div class="game-item g-color" onclick="playGame('Color Prediction')">
-                <span class="game-tag tag-hot">Hot</span>
-                <div class="game-icon-box">🎯</div>
-                <span class="game-title">Color Prediction</span>
-                <span class="game-provider">Smart Slots</span>
-            </div>
-            <div class="game-item g-dragon" onclick="playGame('Dragon Tiger')">
-                <span class="game-tag tag-vip">Vip</span>
-                <div class="game-icon-box">🐯</div>
-                <span class="game-title">Dragon Tiger</span>
-                <span class="game-provider">Kingmaker</span>
-            </div>
-            <div class="game-item g-roulette" onclick="playGame('Roulette')">
-                <div class="game-icon-box">🎡</div>
-                <span class="game-title">Roulette Wheel</span>
-                <span class="game-provider">Evolution</span>
-            </div>
-            <div class="game-item g-patti" onclick="playGame('Teen Patti')">
-                <span class="game-tag tag-new">New</span>
-                <div class="game-icon-box">🃏</div>
-                <span class="game-title">Teen Patti</span>
-                <span class="game-provider">Super Win</span>
-            </div>
-            <div class="game-item g-mines" onclick="playGame('Mines')">
-                <div class="game-icon-box">💣</div>
-                <span class="game-title">Mines sweeper</span>
-                <span class="game-provider">Spribe</span>
-            </div>
-            <div class="game-item g-slots" onclick="playGame('Slots')">
-                <div class="game-icon-box">🎰</div>
-                <span class="game-title">Lucky Slots</span>
-                <span class="game-provider">PG Soft</span>
-            </div>
-            <div class="game-item g-baccarat" onclick="playGame('Baccarat')">
-                <div class="game-icon-box">💎</div>
-                <span class="game-title">Baccarat Elite</span>
-                <span class="game-provider">Ezugi</span>
-            </div>
-            <div class="game-item g-blackjack" onclick="playGame('Blackjack')">
-                <span class="game-tag tag-vip">Vip</span>
-                <div class="game-icon-box">♠️</div>
-                <span class="game-title">Blackjack Pro</span>
-                <span class="game-provider">Evolution</span>
-            </div>
-            <div class="game-item g-sicbo" onclick="playGame('Sic Bo')">
-                <div class="game-icon-box">💥</div>
-                <span class="game-title">Sic Bo Dice</span>
-                <span class="game-provider">Kingmaker</span>
-            </div>
-            <div class="game-item g-car" onclick="playGame('Car Roulette')">
-                <span class="game-tag tag-new">New</span>
-                <div class="game-icon-box">🚗</div>
-                <span class="game-title">Car Roulette</span>
-                <span class="game-provider">Smart UI</span>
-            </div>
-            <div class="game-item g-jetx" onclick="playGame('JetX')">
-                <div class="game-icon-box">🚀</div>
-                <span class="game-title">JetX Rocket</span>
-                <span class="game-provider">SmartSoft</span>
-            </div>
-            <div class="game-item g-andar" onclick="playGame('Andar Bahar')">
-                <span class="game-tag tag-hot">Hot</span>
-                <div class="game-icon-box">🃏</div>
-                <span class="game-title">Andar Bahar</span>
-                <span class="game-provider">Jili Games</span>
-            </div>
-            <div class="game-item g-ludo" onclick="playGame('Ludo Bet')">
-                <div class="game-icon-box">👑</div>
-                <span class="game-title">Ludo Royale</span>
-                <span class="game-provider">Mega Win</span>
-            </div>
-            <div class="game-item g-wheel" onclick="playGame('Wheel Fortune')">
-                <div class="game-icon-box">🌀</div>
-                <span class="game-title">Wheel of Fortune</span>
-                <span class="game-provider">BetGames</span>
-            </div>
-            <div class="game-item g-plinko" onclick="playGame('Plinko')">
-                <span class="game-tag tag-new">New</span>
-                <div class="game-icon-box">🟢</div>
-                <span class="game-title">Plinko Drops</span>
-                <span class="game-provider">Spribe</span>
-            </div>
-            <div class="game-item g-poker" onclick="playGame('Poker')">
-                <div class="game-icon-box">🃏</div>
-                <span class="game-title">Texas Poker</span>
-                <span class="game-provider">Holdem Club</span>
-            </div>
-            <div class="game-item g-dice" onclick="playGame('Dice')">
-                <div class="game-icon-box">🎲</div>
-                <span class="game-title">Fast Dice Roll</span>
-                <span class="game-provider">Jili Games</span>
-            </div>
-            <div class="game-item g-crash" onclick="playGame('Crash')">
-                <span class="game-tag tag-hot">Hot</span>
-                <div class="game-icon-box">📈</div>
-                <span class="game-title">Crash Moon</span>
-                <span class="game-provider">Crypto Play</span>
-            </div>
-        </div>
-    </div>
-
-    <div id="inviteView" class="tab-content-view">
-        <div class="section-header">
-            <h2>Invite Friends & Earn</h2>
-        </div>
-        <div class="invite-box">
-            <h3>💸 Refer Karke Kamayein</h3>
-            <p style="margin-top: 8px; font-size: 13px; color: var(--text-gray);">Apne dosto ko niche diye link se join karwayein aur jab wo first deposit karenge toh aap dono ko milega cash bonus!</p>
-            <div class="ref-box">
-                <span id="refLink">https://megawin.club/reg?code=78923</span>
-                <span style="color: var(--primary-green); cursor: pointer;" onclick="copyLink()">COPY</span>
-            </div>
-            <p style="font-size: 12px; color: var(--accent-gold);">Total Invited Friends: 0 | Total Earnings: ₹0.00</p>
-        </div>
-    </div>
-
-    <div id="rulesView" class="tab-content-view">
-        <div class="section-header">
-            <h2>Gaming Rules & Terms</h2>
-        </div>
-        <div class="rules-list">
-            <div class="rule-card">
-                <h4 style="color: var(--accent-gold);">1. Fair Play Policy</h4>
-                <p style="font-size: 13px; color: var(--text-gray); margin-top: 4px;">Koi bhi bot ya automatic betting scripts ka upyog account ko permanently block kar sakta hai.</p>
-            </div>
-            <div class="rule-card">
-                <h4 style="color: var(--accent-gold);">2. Deposit Validation</h4>
-                <p style="font-size: 13px; color: var(--text-gray); margin-top: 4px;">Deposit karne ke baad UPI UTR Reference number sahi se enter karein taaki balance 2 minute me add ho sake.</p>
-            </div>
-            <div class="rule-card">
-                <h4 style="color: var(--accent-gold);">3. Withdraw Conditions</h4>
-                <p style="font-size: 13px; color: var(--text-gray); margin-top: 4px;">Minimum withdraw amount ₹500 hai. Bank account details ekदम sahi honi chahiye.</p>
-            </div>
-        </div>
-    </div>
-
-    <div id="profileView" class="tab-content-view">
-        <div class="section-header">
-            <h2>My Profile & Account</h2>
-        </div>
-        <div class="profile-card">
-            <div class="avatar-circle">👤</div>
-            <div>
-                <h3>User ID: MW_89231</h3>
-                <p style="font-size: 13px; color: var(--text-gray);">VIP Level: 1 | Secure Account</p>
-            </div>
-        </div>
-        <div class="action-buttons" style="display: flex; gap: 10px; margin-bottom: 20px;">
-            <button class="submit-btn" style="background-color: var(--bg-card); color: white; border: 1px solid #234739;" onclick="openModal('depositModal')">💳 Add Cash</button>
-            <button class="submit-btn" onclick="openModal('withdrawModal')">🏦 Cash Out</button>
-        </div>
-    </div>
-
-
-    <div id="depositModal" class="modal-screen" onclick="closeModalOnOutsideClick(event, 'depositModal')">
-        <div class="modal-container">
-            <div class="modal-header">
-                <span class="modal-title">💸 Fast Secure Deposit</span>
-                <span class="modal-close" onclick="closeModal('depositModal')">&times;</span>
-            </div>
-            <div class="form-group">
-                <label class="form-label">Select Deposit Amount (₹)</label>
-                <div class="chip-grid">
-                    <div class="amount-chip active" onclick="setAmount(100, this)">₹100</div>
-                    <div class="amount-chip" onclick="setAmount(500, this)">₹500</div>
-                    <div class="amount-chip" onclick="setAmount(1000, this)">₹1000</div>
-                    <div class="amount-chip" onclick="setAmount(5000, this)">₹5000</div>
-                </div>
-                <input type="number" id="customDepositInput" class="form-input" value="100" placeholder="Enter custom amount">
-            </div>
-
-            <label class="form-label">Select Payment Method</label>
-            <div class="gateway-list">
-                <div class="gateway-item active" onclick="setGateway('paytm', this)">
-                    <span class="gateway-dot"></span>
-                    <span>🔵 Paytm App</span>
-                </div>
-                <div class="gateway-item" onclick="setGateway('gpay', this)">
-                    <span class="gateway-dot"></span>
-                    <span>🟢 Google Pay</span>
-                </div>
-                <div class="gateway-item" onclick="setGateway('phonepe', this)">
-                    <span class="gateway-dot"></span>
-                    <span>🟣 PhonePe</span>
-                </div>
-                <div class="gateway-item" onclick="setGateway('navi', this)">
-                    <span class="gateway-dot"></span>
-                    <span>🟡 Navi UPI</span>
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label class="form-label">Or Pay via Custom UPI ID</label>
-                <input type="text" class="form-input" placeholder="example@ybl" id="customUpiId">
-            </div>
-
-            <button class="submit-btn" onclick="processDeposit()">Pay Securely Now</button>
-        </div>
-    </div>
-
-
-    <div id="withdrawModal" class="modal-screen" onclick="closeModalOnOutsideClick(event, 'withdrawModal')">
-        <div class="modal-container">
-            <div class="modal-header">
-                <span class="modal-title">🏦 Bank Wire Withdrawal</span>
-                <span class="modal-close" onclick="closeModal('withdrawModal')">&times;</span>
-            </div>
-            <div class="form-group">
-                <label class="form-label">Enter Withdrawal Amount (₹)</label>
-                <input type="number" id="withdrawAmount" class="form-input" placeholder="Minimum ₹500">
-            </div>
-            <div class="form-group">
-                <label class="form-label">Bank Name</label>
-                <input type="text" id="bankName" class="form-input" placeholder="State Bank of India, HDFC etc.">
-            </div>
-            <div class="form-group">
-                <label class="form-label">Account Number</label>
-                <input type="password" id="accNumber" class="form-input" placeholder="Enter bank account number">
-            </div>
-            <div class="form-group">
-                <label class="form-label">IFSC Code</label>
-                <input type="text" id="ifscCode" class="form-input" placeholder="SBIN0001234" style="text-transform: uppercase;">
-            </div>
-            <div class="form-group">
-                <label class="form-label">Account Holder Name</label>
-                <input type="text" id="holderName" class="form-input" placeholder="Full name as per bank records">
-            </div>
-            <button class="submit-btn" style="background-color: var(--accent-gold);" onclick="processWithdrawal()">Submit Cashout Request</button>
-        </div>
-    </div>
-
-
-    <div class="bottom-navbar">
-        <div class="nav-link active-link" onclick="switchTab('homeView', this)">
-            <span>🏠</span>
-            Home
-        </div>
-        <div class="nav-link" onclick="switchTab('inviteView', this)">
-            <span>👥</span>
-            Invite
-        </div>
-        <div class="nav-link" onclick="openModal('depositModal')">
-            <div class="center-spin-container">
-                <span>🎡</span>
-            </div>
-            Spin
-        </div>
-        <div class="nav-link" onclick="switchTab('rulesView', this)">
-            <span>📜</span>
-            Rules
-        </div>
-        <div class="nav-link" onclick="switchTab('profileView', this)">
-            <span>🏦</span>
-            Wallet
-        </div>
-    </div>
-
-    <script>
-        let balance = 1000.00;
-        let selectedGateway = 'paytm';
-
-        // Core Balance Sync
-        function updateUI() {
-            document.getElementById('displayBalance').innerText = balance.toFixed(2);
-        }
-
-        // Navigation Tabs Management
-        function switchTab(viewId, targetLink) {
-            // Un-activate all view tabs
-            document.querySelectorAll('.tab-content-view').forEach(view => {
-                view.classList.remove('active-view');
-            });
-            // Active targeted view
-            document.getElementById(viewId).classList.add('active-view');
-
-            // Handle links state highlights
-            document.querySelectorAll('.nav-link').forEach(link => {
-                link.classList.remove('active-link');
-            });
-            if(targetLink) {
-                targetLink.classList.add('active-link');
-            }
-        }
-
-        // Modals Controller Functions
-        function openModal(id) {
-            document.getElementById(id).style.display = 'flex';
-        }
-
-        function closeModal(id) {
-            document.getElementById(id).style.display = 'none';
-        }
-
-        function closeModalOnOutsideClick(e, id) {
-            if(e.target.id === id) {
-                closeModal(id);
-            }
-        }
-
-        // Deposit Engine Interactions
-        function setAmount(val, element) {
-            document.getElementById('customDepositInput').value = val;
-            document.querySelectorAll('.amount-chip').forEach(chip => {
-                chip.classList.remove('active');
-            });
-            element.classList.add('active');
-        }
-
-        function setGateway(gatewayName, element) {
-            selectedGateway = gatewayName;
-            document.querySelectorAll('.gateway-item').forEach(item => {
-                item.classList.remove('active');
-            });
-            element.classList.add('active');
-        }
-
-        function processDeposit() {
-            const amount = parseFloat(document.getElementById('customDepositInput').value);
-            if(isNaN(amount) || amount <= 0) {
-                alert('Kripya sahi deposit amount enter karein!');
-                return;
-            }
             
-            // Simulating API Deposit Action
-            balance += amount;
-            updateUI();
-            closeModal('depositModal');
-            alert(`🎉 Success! ₹${amount} aapke wallet me add kar diye gaye hain via ${selectedGateway.toUpperCase()}.`);
-        }
+            <div class="banner">
+                <h3 style="margin:0; font-size:18px;">MEGA-TON</h3>
+                <h4 style="margin:5px 0 0 0; font-size:14px; font-weight:bold;">TOURNAMENT</h4>
+                <p style="font-size:10px; color:#ddd; margin-top: 2px;">WIN BIG PRIZES</p>
+            </div>
 
-        // Withdrawal Engine Logic
-        function processWithdrawal() {
+            <div class="games-section">
+                <div class="section-title">Popular Games</div>
+                <div class="games-grid">
+                    <div class="game-card" onclick="navigateTo('gamePage')"><div class="title">Jackpot</div><div class="win-amt">₹1,500.00</div></div>
+                    <div class="game-card" onclick="navigateTo('gamePage')"><div class="title">Megaton</div><div class="win-amt">₹10,000.00</div></div>
+                    <div class="game-card"><div class="title">Roulette</div><div class="win-amt">₹1,200.00</div></div>
+                    <div class="game-card"><div class="title">Crash</div><div class="win-amt">₹500.00</div></div>
+                </div>
+            </div>
+        </div>
+
+        <div id="gamePage" class="page">
+            <div class="header">
+                <span onclick="navigateTo('homePage')" style="font-size:20px; cursor:pointer;">←</span>
+                <div class="megaton-title">MEGA-TON</div>
+                <div class="wallet-display">₹<span class="balance">5,250.75</span></div>
+            </div>
+            
+            <div class="payout-info">
+                <div class="payout-item"><span class="p-label">GRAND</span><span class="p-value">50,000.00</span></div>
+                <div class="payout-item"><span class="p-label">MAJOR</span><span class="p-value">15,000.00</span></div>
+                <div class="payout-item"><span class="p-label">MINOR</span><span class="p-value">2,000.00</span></div>
+            </div>
+            
+            <div class="slot-machine" id="slots">
+                <div class="reel-symbol">7</div>
+                <div class="reel-
