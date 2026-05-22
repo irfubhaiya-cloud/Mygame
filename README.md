@@ -29,4 +29,4 @@ Welcome to the **Lucky 18 Casino Betting Game**! This is a simple, interactive, 
 
 1. Clone this repository to your local machine:
    ```bash
-   git clone [https://github.com/your-username/your-repo-name.git](https://github.com/your-username/your-repo-name.git)
+   git clone [https://github.com/your-username/your-repo-name.git](https://github.com/your-username/your-repo-name.git) 
